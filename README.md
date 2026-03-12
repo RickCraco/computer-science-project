@@ -18,7 +18,7 @@ The research focuses on the consistency of model decision-making across real and
 * **Data Libraries:** NumPy, Pandas 
 * **Visualization:** Matplotlib, Seaborn 
 * **Machine Learning:** Scikit-Learn, XGBoost, TensorFlow/Keras 
-* **Synthetic Data Generation:** SDV (Synthetic Data Vault), CTGAN 
+* **Generative AI:** SDV (Synthetic Data Vault), CTGAN 
 * **Web Interface:** Gradio 
 
 ## Repository Structure
