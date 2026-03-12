@@ -1,5 +1,5 @@
 import pandas as pd
-import os
+from pathlib import Path
 
 def load_data() ->pd.DataFrame:
     """
@@ -8,15 +8,17 @@ def load_data() ->pd.DataFrame:
     output:
     pd.DataFrame
     """
-    # file path to the csv file
-    file_path = "data/heart.csv"
+    # current file path
+    current_file = Path(__file__).resolve()
 
-    # check if the file exists
-    if not os.path.exists(file_path):
-        # if we are inside another directory we go back of 1
-        file_path = "../data/heart.csv"
+    # root folder path
+    project_root = current_file.parents[1]
 
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"file heart.csv not found in data/")
+    # dataset path
+    file_path = project_root / "data" / "heart.csv"
+
+    # check if the dataset exist
+    if not file_path.exists():
+        raise FileNotFoundError(f"File heart.csv not found: {file_path}")
 
     return pd.read_csv(file_path)
