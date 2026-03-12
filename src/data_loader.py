@@ -12,7 +12,9 @@ def download_data():
 
     # join the path with the file name
     source_path = os.path.join(path, "heart.csv")
-    dest_path = "data/heart.csv" # save the file in the data folder
+    dest_folder = "data" # save the file in the data folder
+
+    dest_path = os.path.join(dest_folder, "heart.csv")
 
     # check if the file exists
     if os.path.exists(source_path):
@@ -28,6 +30,8 @@ def load_data() -> pd.DataFrame:
     Returns:
         pd.DataFrame: The dataset.
     """
-    if not os.path.exists("data/heart.csv"):
+    file_path = "data/heart.csv"
+
+    if not os.path.exists(file_path):
         download_data()
-    return pd.read_csv("data/heart.csv")
+    return pd.read_csv(file_path)
