@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import mannwhitneyu, shapiro, ttest_ind
+from scipy.stats.contingency import association
 
 def plot_hist(df: pd.DataFrame, column: str):
     """
@@ -25,3 +26,5 @@ def plot_hist(df: pd.DataFrame, column: str):
     ax.axvline(df[column].mean(), color="darkred", linestyle="--", label= "Mean")
     ax.axvline(df[column].median(), color="darkgreen", linestyle="--", label= "Median")
     ax.legend() # shows the label of the 2 lines
+
+
