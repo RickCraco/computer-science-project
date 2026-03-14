@@ -28,3 +28,23 @@ def plot_hist(df: pd.DataFrame, column: str):
     ax.legend() # shows the label of the 2 lines
 
 
+def plot_bar(df: pd.DataFrame, column: str):
+    """
+    Draws a bar chart of a categorical column
+
+    input:
+        df: pd.DataFrame  
+        column: str   categorical column
+    """
+    sns.set_theme()
+    plt.title(f"Distribution of column: {column}")
+
+    # creates the countplot of the column
+    ax = sns.countplot(data=df, x=column, hue=column, order=df[column].value_counts(ascending=True).index, legend='brief')
+
+    # draws the count label on each bar
+    for container in ax.containers:
+        ax.bar_label(container)
+
+    plt.tight_layout()
+    plt.show()
