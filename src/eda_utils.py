@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.stats import mannwhitneyu, shapiro, ttest_ind
+from scipy.stats import mannwhitneyu, shapiro, ttest_ind, chi2_contingency
 from scipy.stats.contingency import association
 
 def plot_hist(df: pd.DataFrame, column: str):
@@ -190,3 +190,45 @@ def numeric_biv_analysis(df: pd.DataFrame, column: str, target: str = 'HeartDise
   # box-plot
   plot_box(df, target, column)
   plt.show()
+
+
+
+def qualitative_association(df: pd.DataFrame, column: str, target: str = "HeartDisease"):
+  """
+  Analyze the relationship between a categorical feature and a target variable
+  using contingency tables, visualization, and statistical association tests.
+
+  input:
+  df: pd.DataFrame
+  column: str qualitative feature
+  target: str target class 'HeartDisease'
+  """
+  sns.set_theme()
+
+  # we use the subplots function to draw multiple plots
+  fig, axs = plt.subplots(2,2, figsize=(10,8))  # this creates a grid with 2 rows and 2 columns
+
+  # create the contigency table of ABS Freq
+  contingency_table = pd.crosstab(df[column], df[target])
+  sns.heatmap(contingency_table, annot=True, fmt=".2f", cmap="magma", ax=axs[0,0])
+  axs[0,0].set_title("Contingency table heatmap ABS Freq")
+
+  # create the contigency table of REL Freq %
+  contingency_table_rel = pd.crosstab(df[column], df[target], normalize=True) * 100
+  sns.heatmap(contingency_table_rel, annot=True, fmt=".2f", cmap="magma", ax=axs[0,1])
+  axs[0,1].set_title("Contingency table heatmap REL Freq %")
+
+  # countplot to show the distribution by target
+  sns.countplot(data=df, x=column, hue=target, palette="magma", ax=axs[1,0])
+
+  fig.delaxes(axs[1,1])
+  plt.tight_layout()
+  plt.show()
+
+  # calculate the chi-quadro for qualitative association
+  chi2, p_val, dof, expected = chi2_contingency(contingency_table)
+  print(f"P-value for Chi-Quadro Test: {p_val}")
+
+  # Cramer's V to quantify the association
+  cramer_v = association(contingency_table, method="cramer")
+  print(f"Cramer's V : {cramer_v:.3f}")
