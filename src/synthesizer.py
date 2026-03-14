@@ -49,7 +49,7 @@ def diagnostic_report(real_data: pd.DataFrame, synthetic_data: pd.DataFrame):
   synthetic_data: pd.DataFrame   synthetica data generated using CTGAN
   """
   # detect metadata from the df
-  metadata = Metadata.detect_from_dataframe(df)
+  metadata = Metadata.detect_from_dataframe(real_data)
 
   # run diagnostic report
   diagnostic = run_diagnostic(real_data, synthetic_data, metadata)
