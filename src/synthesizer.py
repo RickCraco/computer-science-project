@@ -37,3 +37,19 @@ def generate_syn_df(df: pd.DataFrame, n_epochs: int) -> pd.DataFrame:
   syn_df = synthesizer.sample(num_rows=10000)
 
   return syn_df
+
+
+
+def diagnostic_report(real_data: pd.DataFrame, synthetic_data: pd.DataFrame):
+  """
+  Prints diagnostic report for synthetic data
+
+  input:
+  real_data: pd.DataFrame   original dataset
+  synthetic_data: pd.DataFrame   synthetica data generated using CTGAN
+  """
+  # detect metadata from the df
+  metadata = Metadata.detect_from_dataframe(df)
+
+  # run diagnostic report
+  diagnostic = run_diagnostic(real_data, synthetic_data, metadata)
