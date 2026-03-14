@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import mannwhitneyu, shapiro, ttest_ind, chi2_contingency
 from scipy.stats.contingency import association
+from sklearn.preprocessing import LabelEncoder
 
 def plot_hist(df: pd.DataFrame, column: str):
     """
@@ -232,3 +233,32 @@ def qualitative_association(df: pd.DataFrame, column: str, target: str = "HeartD
   # Cramer's V to quantify the association
   cramer_v = association(contingency_table, method="cramer")
   print(f"Cramer's V : {cramer_v:.3f}")
+
+
+
+def plot_corr_matrix(df: pd.DataFrame):
+  """
+  Plot the correlation matrix heatmap of the dataframe
+
+  input:
+  df: pd.DataFrame
+  """
+  # to plot the correlation matrix of all features
+  # we first need to transform the qualitative features in numeric values
+
+  df_copy = df.copy() # we create a copy of the orginal dataset
+  le = LabelEncoder() # we instantiate a LabelEncoder obj to encode categorical features
+
+  # we select only the qualitative features
+  qualitative_cols = df.select_dtypes(include="object").columns
+
+  # we use the label encoder to encode the columns
+  for col in qualitative_cols:
+    df_copy[col] = le.fit_transform(df_copy[col])
+
+  # create the correlation matrix
+  correlation_matrix = df_copy.corr()
+
+  # heatmap
+  plt.figure(figsize=(10,8))
+  sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap="coolwarm")
