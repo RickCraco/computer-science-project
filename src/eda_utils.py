@@ -116,3 +116,25 @@ def calculate_statistics(df: pd.DataFrame) -> pd.DataFrame:
   return df_stats
 
 
+def frequency_table(df: pd.DataFrame, column: str) -> pd.DataFrame:
+  """
+  Calculates the frequency table of a
+  qualitative column :
+
+  input:
+  df: pd.DataFrame
+  column: str (name of a column)
+
+  return: pd.DataFrame
+  """
+  # calculates absolute and relative frequencies
+  freq_abs = df[column].value_counts()
+  freq_rel = df[column].value_counts(normalize=True)
+
+  # creates the dataframe for the frequency table
+  freq_table = pd.DataFrame({
+      "ABS Freq": freq_abs,
+      "REL Freq (%)": (freq_rel *100).round(2)
+  })
+
+  return freq_table
