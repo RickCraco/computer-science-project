@@ -53,3 +53,24 @@ def diagnostic_report(real_data: pd.DataFrame, synthetic_data: pd.DataFrame):
 
   # run diagnostic report
   diagnostic = run_diagnostic(real_data, synthetic_data, metadata)
+
+
+
+def quality_report(real_data: pd.DataFrame, synthetic_data: pd.DataFrame) -> pd.DataFrame:
+  """
+  Shows the data quality report for synthetic data
+
+  input:
+  real_data: pd.DataFrame   original dataset
+  synthetic_data: pd.DataFrame    synthetic data generated using CTGAN
+
+  output:
+  q_report: obj   quality report object from SDV
+  """
+  # detect metadata from the df
+  metadata = Metadata.detect_from_dataframe(real_data)
+
+  # run quality report
+  q_report = evaluate_quality(real_data, synthetic_data, metadata)
+
+  return q_report
