@@ -114,3 +114,5 @@ def calculate_statistics(df: pd.DataFrame) -> pd.DataFrame:
 
   df_stats = df_stats.style.format("{:.2f}").background_gradient(cmap="viridis")
   return df_stats
+
+
