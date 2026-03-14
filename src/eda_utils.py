@@ -168,3 +168,25 @@ def statistical_tests(df: pd.DataFrame, column: str, target: str = 'HeartDisease
   print("\nP-value T-test")
   t_stat,p_value = ttest_ind(group_0, group_1, equal_var=False)
   print(p_value)
+
+
+def numeric_biv_analysis(df: pd.DataFrame, column: str, target: str = 'HeartDisease'):
+  """
+  Performs bivariate analysis between one numeric feature
+  and target variable
+
+  input:
+  df: pd.DataFrame
+  column: str Numeric feature
+  target: str Target class, or any categorical feature
+  """
+  # calculate descriptive statistics by target
+  print(df.groupby(target)[column].describe())
+
+  # performs statistical tests (Shapiro Test, Mann-Whitney, t-test)
+  print("\nStatistical tests:")
+  statistical_tests(df, column, target)
+
+  # box-plot
+  plot_box(df, target, column)
+  plt.show()
