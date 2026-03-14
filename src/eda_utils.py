@@ -48,3 +48,27 @@ def plot_bar(df: pd.DataFrame, column: str):
 
     plt.tight_layout()
     plt.show()
+
+
+def plot_box(df: pd.DataFrame, column1: str, column2: str | None = None):
+    """
+    Draws the box plot of a single column or,
+    draws the box plot of a numerical column by
+    a categorical column
+
+    input:
+        df: pd.DataFrame  dataset
+        column1: str  column 
+        column2: str  column
+    """
+    sns.set_theme()
+
+    # check if column2 is None, if so draw a single boxplot
+    if column2 is None:
+        # creates the box plot
+        ax = sns.boxplot(data=df, y=column1)
+        plt.title(f"Distribution of column: {column1}")
+    else:
+        # creates the box plot of column by another
+        ax = sns.boxplot(data=df, x=column2, y=column1, hue=column2, palette='viridis', legend=False)
+        plt.title(f"Distribution of {column1} per {column2}")
