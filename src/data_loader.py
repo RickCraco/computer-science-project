@@ -5,8 +5,8 @@ def load_data() ->pd.DataFrame:
     """
     Load heart.csv dataset from data/ directory.
 
-    output:
-    pd.DataFrame
+    Returns:
+        pd.DataFrame
     """
     # current file path
     current_file = Path(__file__).resolve()
