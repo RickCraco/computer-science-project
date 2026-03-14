@@ -138,3 +138,33 @@ def frequency_table(df: pd.DataFrame, column: str) -> pd.DataFrame:
   })
 
   return freq_table
+
+
+def statistical_tests(df: pd.DataFrame, column: str, target: str = 'HeartDisease'):
+  """
+  Performs a Shapiro test (checks if data comes froma normal distribution),
+  Mann-Whitney test (checks difference between two independent groups, non-normally distributed)
+  t-test (checks difference between two independent groups normally distributed)
+
+  input:
+  df: pd.DataFrame
+  column: str numeric feature
+  target: str target class
+  """
+  # divide data into two groups (group_0 -> target = 0 ; group_1 -> target = 1)
+  group_0 = df[df[target] == 0][column]
+  group_1 = df[df[target] == 1][column]
+
+  # Shapiro test
+  print(f"Shapiro test per {column} (target = 0)", shapiro(group_0))
+  print(f"Shapirot test per {column} (target = 1)", shapiro(group_1))
+
+  # Mann-Whitney test
+  u_stat, p_val = mannwhitneyu(group_0, group_1, alternative='two-sided')
+  print("\nMann-Whitney U Test:")
+  print(f"U-statistic: {u_stat:.4f}, p-value: {p_val:.4e}")
+
+  # t-test :
+  print("\nP-value T-test")
+  t_stat,p_value = ttest_ind(group_0, group_1, equal_var=False)
+  print(p_value)
