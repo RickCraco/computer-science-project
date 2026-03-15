@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 from sklearn.model_selection import train_test_split
 from sdv.metadata import Metadata
 from sdv.single_table import CTGANSynthesizer
@@ -17,21 +18,34 @@ def generate_syn_df(df: pd.DataFrame, n_epochs: int) -> pd.DataFrame:
   output:
   syn_df: pd.DataFrame
   """
-  # detects the metadata from the original df
-  metadata = Metadata.detect_from_dataframe(df)
+  # path to model folder
+  dir_path = "C:\Users\Riccardo\Desktop\computer-science-project\models"
 
-  # CTGAN Synthesizer
-  synthesizer = CTGANSynthesizer(
+  # path to save the CTGAN model
+  model_path = os.path.join(dir_path, f"ctgan_{n_epochs}_epochs.pkl")
+
+  # check if the model already exists
+  if os.path.exists(model_path):
+    print(f"Loading existing model: {model_path}")
+    synthesizer = CTGANSynthesizer.load(model_path) # load existing model
+  else:
+    print(f"Training new CTGAN model with {n_epochs}...")
+    
+    # detects the metadata from the original df
+    metadata = Metadata.detect_from_dataframe(df)
+
+    # CTGAN Synthesizer
+    synthesizer = CTGANSynthesizer(
       metadata=metadata,
       epochs=n_epochs,
       verbose=True
-  )
+    )
 
-  # we divide the original dataset into train and test to prevent data leakage
-  train_df, test_df = train_test_split(df, test_size=0.3, random_state=42, stratify=df['HeartDisease'])
+    # we divide the original dataset into train and test to prevent data leakage
+    train_df, test_df = train_test_split(df, test_size=0.3, random_state=42, stratify=df['HeartDisease'])
 
-  # we train the synthesizer using the train_df
-  synthesizer.fit(train_df)
+    # we train the synthesizer using the train_df
+    synthesizer.fit(train_df)
 
   # we generate the new df
   syn_df = synthesizer.sample(num_rows=10000)
