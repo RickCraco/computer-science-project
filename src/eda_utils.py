@@ -27,6 +27,8 @@ def plot_hist(df: pd.DataFrame, column: str):
     ax.axvline(df[column].median(), color="darkgreen", linestyle="--", label= "Median")
     ax.legend() # shows the label of the 2 lines
 
+    plt.show()
+
 
 def plot_bar(df: pd.DataFrame, column: str):
     """
@@ -68,6 +70,7 @@ def plot_box(df: pd.DataFrame, column1: str, column2: str | None = None):
         # creates the box plot
         ax = sns.boxplot(data=df, y=column1)
         plt.title(f"Distribution of column: {column1}")
+        plt.show()
     else:
         # creates the box plot of column by another
         ax = sns.boxplot(data=df, x=column2, y=column1, hue=column2, palette='viridis', legend=False)
