@@ -23,7 +23,7 @@ def plot_hist(df: pd.DataFrame, column: str):
     ax = sns.histplot(data=df, x=column, kde=True)
 
     # we create two vertical lines for the mean and median value
-    ax.axvline(df[column].mean(), color="darkred", linestyle="--", label= f"Mean: {df[column].mean()}")
+    ax.axvline(df[column].mean(), color="darkred", linestyle="--", label= f"Mean: {df[column].mean():.2f}")
     ax.axvline(df[column].median(), color="darkgreen", linestyle="--", label= f"Median: {df[column].median()}")
     ax.legend() # shows the label of the 2 lines
 
