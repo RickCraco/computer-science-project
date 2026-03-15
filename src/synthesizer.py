@@ -18,8 +18,8 @@ def generate_syn_df(df: pd.DataFrame, n_epochs: int) -> pd.DataFrame:
   output:
   syn_df: pd.DataFrame
   """
-  # path to model folder
-  dir_path = "C:\Users\Riccardo\Desktop\computer-science-project\models"
+  # path to models/ folder
+  dir_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'models')
 
   # path to save the CTGAN model
   model_path = os.path.join(dir_path, f"ctgan_{n_epochs}_epochs.pkl")
