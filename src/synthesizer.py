@@ -47,6 +47,10 @@ def generate_syn_df(df: pd.DataFrame, n_epochs: int) -> pd.DataFrame:
     # we train the synthesizer using the train_df
     synthesizer.fit(train_df)
 
+    # we save the model in the models/ folder
+    synthesizer.save(model_path)
+    print(f"CTGAN model saved in : {model_path}")
+
   # we generate the new df
   syn_df = synthesizer.sample(num_rows=10000)
 
