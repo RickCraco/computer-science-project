@@ -191,7 +191,7 @@ def numeric_biv_analysis(df: pd.DataFrame, column: str, target: str = 'HeartDise
   statistical_tests(df, column, target)
 
   # box-plot
-  plot_box(df, target, column)
+  plot_box(df, column, target)
   plt.show()
 
 
