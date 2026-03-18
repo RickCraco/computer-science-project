@@ -32,7 +32,7 @@ def remove_outliers(df: pd.DataFrame, columns: list) -> pd.DataFrame:
 
         print(f"Number of outliers removed: {len(df) - len(df_clean)}")
 
-        return df_clean
+    return df_clean
 
 
 
