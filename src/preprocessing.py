@@ -33,3 +33,33 @@ def remove_outliers(df: pd.DataFrame, columns: list) -> pd.DataFrame:
         print(f"Number of outliers removed: {len(df) - len(df_clean)}")
 
         return df_clean
+
+
+
+def get_preprocessor(numeric_features: list, categorical_features: list):
+    """
+    Build the preprocessor for the complete pipeline.
+
+    Input:
+
+    numeric_features: list   list of numerical features
+    categorical_features: list   list of categorical features
+
+    Return:
+    preprocessor: obj   returns preprocessor obj from sklearn
+    """
+    # standard scaler for numerical features
+    numeric_transformer = StandardScaler()
+
+    # ordinal encoding for categorical features
+    categorical_transformer = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+
+    # preprocessor for sklearn pipeline
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('numeric', numeric_transformer, numeric_features),
+            ('categorical', categorical_transformer, categorical_features)
+        ]
+    )
+
+    return preprocessor
