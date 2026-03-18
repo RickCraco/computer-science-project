@@ -43,3 +43,86 @@ def build_dnn(n_features: int):
 
 
 
+def evaluate_synthetic_quality(model, param_grid: dict, syn_df: pd.DataFrame, train_real_df: pd.DataFrame, test_real_df: pd.DataFrame, num_cols: list, cat_cols: list, target_col='HeartDisease'):
+    """
+    Train and evaluate a model using synthetic data
+    and a model using real data using the Train Synthetic
+    Test Real (TSTR) standard, to evaluate the synthetic data
+    efficacy.
+
+    Input:
+    model: obj   Model to train and evaluate
+    param_grid: dict  Dictionary for hyperparameter tuning
+    syn_df: pd.DataFrame  Synthetic dataset
+    train_real_df: pd.DataFrame  Real dataset used for training (70%)
+    test_real_df: pd.DataFrame   Real dataset used for testing (30%)
+    num_cols: list  Numerical features
+    cat_cols: list  Categorical features
+
+    Output:
+    results: dict  Dictionary containing best estimator, score and efficacy
+    """
+    # preparing the synthetic and real data
+    X_syn = syn_df.drop(target_col, axis=1)
+    y_syn = syn_df[target_col]
+
+    X_train_real = train_real_df.drop(target_col, axis=1)
+    y_train_real = train_real_df[target_col]
+
+    X_test_real = test_real_df.drop(target_col, axis=1)
+    y_test_real = test_real_df[target_col]
+
+    # building the complete pipeline
+    preprocessor = get_preprocessor(num_cols, cat_cols)  # we use our preprocessor
+
+    full_pipeline = Pipeline(steps=[
+        ('preprocessor', preprocessor),
+        ('classifier', model)
+    ])
+
+    # training on synthetic data and testing on real (TSTR)
+    print(f"\n Training {model.__class__.__name__} model on synthetic data")
+    grid_syn = GridSearchCV(
+        full_pipeline,
+        param_grid=param_grid,
+        cv=5,  # cross-validation folds
+        scoring='accuracy',
+        n_jobs=-1
+    )
+    grid_syn.fit(X_syn, y_syn)  # we train the model on synthetic data
+    acc_syn_on_real = grid_syn.best_estimator_.score(X_test_real, y_test_real)
+
+    # training on real data and testing on real data our benchmark
+    print(f"\n Training {model.__class__.__name__} model on real data")
+    grid_real = GridSearchCV(
+        full_pipeline,
+        param_grid=param_grid,
+        cv=5,
+        scoring='accuracy',
+        n_jobs=-1
+    )
+    grid_real.fit(X_train_real, y_train_real)
+    acc_real_on_real = grid_real.best_estimator_.score(X_test_real, y_test_real)
+
+    # reporting results
+    print("\n" + "="*40)
+    print(f"Model: {model.__class__.__name__}")
+    print(f"Best params SYNTHETIC: {grid_syn.best_params_}")
+    print(f"Accuracy TRTR (Real on Real): {acc_real_on_real:.4f}")
+    print(f"Accuracy TSTR (Synthetic on Real): {acc_syn_on_real:.4f}")
+
+    # we calculate the efficacy of the synthetic data
+    efficacy = (acc_syn_on_real / acc_real_on_real) * 100 if acc_real_on_real > 0 else 0
+    print(f"Sythetic Data Efficacy: {efficacy:.2f}%")
+    print("="*40)
+
+    results = {
+        'model': model.__class__.__name__,
+        'acc_real': acc_real_on_real,
+        'acc_syn': acc_syn_on_real,
+        'efficacy': efficacy,
+        'best_estimator_syn': grid_syn.best_estimator_,
+        'best_estimator_real': grid_real.best_estimator_
+    }
+
+    return results
