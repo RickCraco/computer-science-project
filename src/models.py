@@ -17,46 +17,6 @@ from tensorflow.keras.layers import InputLayer, Dense, Dropout
 
 from src.preprocessing import get_preprocessor
 
-def full_pipeline(model_name: str, numeric_cols: list, categorical_cols: list):
-    """
-    Build full machine learning pipeline with preprocessing and model training
-
-    Input:
-    model_name: str  Name of the classifier
-    numeric_cols: list   numeric features
-    categorical_cols: list  categorical features
-
-    Output:
-    Pipeline: obj  sklearn Pipeline object
-    """
-    # we get the preprocessor
-    preprocessor = get_preprocessor(numeric_features=numeric_cols, categorical_features=categorical_cols)
-
-    # dictionary of all the models that will be tested
-    models = {
-        'logistic_regression': LogisticRegression(),
-        'svm': SVC(probability=True),
-        'decision_tree': DecisionTreeClassifier(criterion='gini'),
-        'random_forest': RandomForestClassifier(n_estimators=100, criterion='gini', max_depth=4),
-        'xgboost': XGBClassifier(eval_metric='logloss'),
-        'lightgbm': LGBMClassifier(verbose=-1),
-        'catboost':CatBoostClassifier(verbose=0),
-        'dnn': KerasClassifier(model=build_dnn, epochs=50, verbose=0)
-    }
-
-    # check if the model is in the model dictionary
-    if model_name not in models:
-        raise ValueError(f"Model {model_name} not in models dictionary")
-
-    # build the complete pipeline
-    pipeline = Pipeline(steps=[
-        ('preprocessor', preprocessor),
-        ('classifier', models[model_name])
-    ])
-
-    return pipeline
-
-
 
 def build_dnn(n_features: int):
     """
@@ -88,3 +48,33 @@ def build_dnn(n_features: int):
     model.compile(loss='binary_crossentropy', metrics=['accuracy'])
 
     return model
+
+
+
+def train_with_gridsearch(model_name: str, X_train, y_train, num_cols: list, cat_cols: list, param_grid: dict):
+    """
+    Trains a model using Gridsearch for hyperparameter tuning and cross-validation
+
+    Input:
+    model_name:  str  Classifier name
+    X_train: np.Array   array of features for training
+    y_train: np.Array   array containing the target class column
+    num_cols: list  list of numeric features
+    cat_cols: list  list of categorical features
+    param_grid: dict  dictionary for hyperparameter tuning
+    """
+    # we get the pipeline
+    pipeline = full_pipeline(model_name, num_cols, cat_cols)
+
+    # we configure the Grid Search
+    grid_search = GridSearchCV(
+        estimator=pipeline,
+        param_grid=param_grid,
+        cv=5,  # cross-validation folds
+        scoring='accuracy',
+        n_jobs=-1,
+        verbose=1
+    )
+
+    # training of the model
+    grid_search.fit(X_train, y_train)
