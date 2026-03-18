@@ -51,30 +51,3 @@ def build_dnn(n_features: int):
 
 
 
-def train_with_gridsearch(model_name: str, X_train, y_train, num_cols: list, cat_cols: list, param_grid: dict):
-    """
-    Trains a model using Gridsearch for hyperparameter tuning and cross-validation
-
-    Input:
-    model_name:  str  Classifier name
-    X_train: np.Array   array of features for training
-    y_train: np.Array   array containing the target class column
-    num_cols: list  list of numeric features
-    cat_cols: list  list of categorical features
-    param_grid: dict  dictionary for hyperparameter tuning
-    """
-    # we get the pipeline
-    pipeline = full_pipeline(model_name, num_cols, cat_cols)
-
-    # we configure the Grid Search
-    grid_search = GridSearchCV(
-        estimator=pipeline,
-        param_grid=param_grid,
-        cv=5,  # cross-validation folds
-        scoring='accuracy',
-        n_jobs=-1,
-        verbose=1
-    )
-
-    # training of the model
-    grid_search.fit(X_train, y_train)
