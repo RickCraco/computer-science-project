@@ -122,7 +122,9 @@ def evaluate_synthetic_quality(model, param_grid: dict, syn_df: pd.DataFrame, tr
         'acc_syn': acc_syn_on_real,
         'efficacy': efficacy,
         'best_estimator_syn': grid_syn.best_estimator_,
-        'best_estimator_real': grid_real.best_estimator_
+        'best_estimator_real': grid_real.best_estimator_,
+        'grid_search_syn': grid_syn,
+        'grid_search_real': grid_real
     }
 
     return results
