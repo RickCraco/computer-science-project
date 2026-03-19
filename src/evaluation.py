@@ -57,3 +57,40 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
 
         print("\n ==== REAL MODEL (TRTR) ====")
         print(classification_report(y_test_real, y_pred_real))
+
+        # we plot the confusion matrix for both synthetic and real
+        plt.title("Confusion Matrix - Synthetic")
+        plot_confusion_matrix(y_test_real, y_pred_syn)
+        plt.show()
+
+        plt.title("Confusion Matrix - Real")
+        plot_confusion_matrix(y_test_real, y_pred_real)
+
+        # we check the logloss values for both synthetic and real
+        # condition to check wether the model has predict_proba method
+        if hasattr(model_syn, "predict_proba") and hasattr(model_real, "predict_proba"):
+            # we use predict proba to predict the probability instead of the class label
+            y_proba_syn = model_syn.predict_proba(X_test_real)
+            y_proba_real = model_real.predict_proba(X_test_real)
+
+            # we calculate the log loss
+            print("\n ==== LOG LOSS ====")
+            print(f"Synthetic loss: {log_loss(y_test_real, y_proba_syn):.4f}")
+            print(f"Real loss: {log_loss(y_test_real, y_proba_real):.4f}")
+
+        print("\n ==== CROSS-VALIDATION ANALYSIS ====")
+        # we retrieve the GridSearch obj 
+        grid_syn = result["grid_search_syn"]
+        grid_real = result["grid_search_real"]
+
+        # we create a df containing the cv_results_ dict
+        cv_syn_df = pd.DataFrame(grid_syn.cv_results_)
+        cv_real_df = pd.DataFrame(grid_real.cv_results_)
+
+        # we calculate the mean accuracy score for each fold
+        mean_cv_syn = cv_syn_df["mean_test_score"].mean()
+        mean_cv_real = cv_real_df["mean_test_score"].mean()
+
+        print(f"Mean CV score (Synthetic): {mean_cv_syn:.4f}")
+        print(f"Mean CV score (Real):      {mean_cv_real:.4f}")
+        print(f"Difference (Syn - Real):   {(mean_cv_syn - mean_cv_real):.4f}")
