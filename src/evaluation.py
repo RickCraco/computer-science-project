@@ -78,6 +78,14 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
             print(f"Synthetic loss: {log_loss(y_test_real, y_proba_syn):.4f}")
             print(f"Real loss: {log_loss(y_test_real, y_proba_real):.4f}")
 
+        print("\n ==== ROC CURVE ====")
+        plt.title("ROC Curve Synthetic")
+        RocCurveDisplay.from_estimator(model_syn, X_test_real, y_test_real) # we plot the ROC Curve and calculate the AUC score
+        plt.show()
+        plt.title("ROC Curve Real")
+        RocCurveDisplay.from_estimator(model_real, X_test_real, y_test_real)
+        plt.show()
+
         print("\n ==== CROSS-VALIDATION ANALYSIS ====")
         # we retrieve the GridSearch obj 
         grid_syn = result["grid_search_syn"]
