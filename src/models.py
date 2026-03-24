@@ -99,7 +99,7 @@ def evaluate_synthetic_quality(model, param_grid: dict, syn_df: pd.DataFrame, tr
         param_grid=param_grid,
         cv=5,
         scoring='accuracy',
-        n_jobs=-1
+        n_jobs=2
     )
     grid_real.fit(X_train_real, y_train_real)
     acc_real_on_real = grid_real.best_estimator_.score(X_test_real, y_test_real)
