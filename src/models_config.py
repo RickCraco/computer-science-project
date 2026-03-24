@@ -76,7 +76,7 @@ def get_models_config():
         },
         {
             "name": "CatBoostClassifier",
-            "model": CatBoostClassifier(random_state=42, verbose=0, logging_level='Silent', thread_count=1),
+            "model": CatBoostClassifier(random_state=42, logging_level='Silent', thread_count=1),
             "param_grid": {
                 "classifier__depth": [2, 4, 6, 8],
                 "classifier__learning_rate": [0.01, 0.1, 0.2],
