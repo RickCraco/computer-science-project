@@ -55,7 +55,7 @@ def get_models_config():
         },
         {
             "name": "XGBoostClassifier",
-            "model": XGBClassifier(random_state=42),
+            "model": XGBClassifier(random_state=42, n_jobs=1),
             "param_grid": {
                 "classifier__n_estimators": [100, 200, 300],
                 "classifier__max_depth": [2, 4, 6, 8, None],
@@ -65,7 +65,7 @@ def get_models_config():
         },
         {
             "name": "LGBMClassifier",
-            "model": LGBMClassifier(random_state=42, verbose=-1),
+            "model": LGBMClassifier(random_state=42, verbose=-1, n_jobs=1),
             "param_grid": {
                 "classifier__n_estimators": [100, 200, 300],
                 "classifier__learning_rate": [0.01, 0.1, 0.2],
@@ -76,7 +76,7 @@ def get_models_config():
         },
         {
             "name": "CatBoostClassifier",
-            "model": CatBoostClassifier(random_state=42, verbose=0, logging_level='Silent'),
+            "model": CatBoostClassifier(random_state=42, verbose=0, logging_level='Silent', thread_count=1),
             "param_grid": {
                 "classifier__depth": [2, 4, 6, 8],
                 "classifier__learning_rate": [0.01, 0.1, 0.2],
