@@ -114,3 +114,27 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
         print(f"Mean CV score (Synthetic): {mean_cv_syn:.4f}")
         print(f"Mean CV score (Real):      {mean_cv_real:.4f}")
         print(f"Difference (Syn - Real):   {(mean_cv_syn - mean_cv_real):.4f}")
+
+
+
+def plot_learning_curve(history, label: str):
+    """
+    Plot the learning curve for loss and accuracy
+    for a Deep Neural Network model.
+
+    Input:
+    history: obj   History model containing the information of a trained DNN
+    label:  str    Label for plot title
+    """
+    sns.set_theme()
+    plt.figure(figsize=(10,4))
+
+    # we use a loop to go through key metrics
+    for subplot, curve in enumerate(["loss", "accuracy"]):
+        plt.subplot(1,2, subplot + 1)
+        plt.plot(history.history[curve], label="training")
+        plt.plot(history.history["val_"+curve], label="validation")
+        plt.legend()
+        plt.title(label + ":" + curve)
+    
+    plt.tight_layout()
