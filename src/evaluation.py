@@ -29,7 +29,6 @@ def plot_confusion_matrix(y_true, y_pred, labels= ["Negative", "Positive"], show
         ax.text(0.5, -0.2, f"Precision: {precision:.3f}   Recall: {recall:.3f}", ha='center', transform=ax.transAxes)
 
     plt.tight_layout()
-    plt.show()
     
     return fig
 
