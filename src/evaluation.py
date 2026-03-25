@@ -23,11 +23,13 @@ def plot_confusion_matrix(y_true, y_pred, labels= ["Negative", "Positive"], show
     sns.heatmap(df_cm, annot=True, fmt='g', ax=ax)
 
     if show_precision_recall:
-        plt.text(0, -0.1, f"Precision: {(cm[1][1]/(cm[1][1]+cm[0][1])):.3f}")
-        plt.text(1, -0.1, f"Recall: {(cm[1][1]/(cm[1][1]+cm[1][0])):.3f}")
+        precision = cm[1][1] / (cm[1][1] + cm[0][1])
+        recall = cm[1][1] / (cm[1][1] + cm[1][0])
+
+        ax.text(0.5, -0.2, f"Precision: {precision:.3f}   Recall: {recall:.3f}", ha='center', transform=ax.transAxes)
 
     plt.tight_layout()
-    plt.show()
+    return fig
 
 
 def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: pd.Series):
