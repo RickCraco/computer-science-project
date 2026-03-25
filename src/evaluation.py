@@ -19,11 +19,12 @@ def plot_confusion_matrix(y_true, y_pred, labels= ["Negative", "Positive"], show
 
     df_cm = pd.DataFrame(cm, index=labels, columns=["Predicted" + labels[0], "Predicted" + labels[0]])
     sns.heatmap(df_cm, annot=True, fmt='g')
-    plt.show()
 
     if show_precision_recall:
         plt.text(0, -0.1, f"Precision: {(cm[1][1]/(cm[1][1]+cm[0][1])):.3f}")
         plt.text(1, -0.1, f"Recall: {(cm[1][1]/(cm[1][1]+cm[1][0])):.3f}")
+
+    plt.show()
 
 
 def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: pd.Series):
