@@ -85,11 +85,14 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
             print(f"Real loss: {log_loss(y_test_real, y_proba_real):.4f}")
 
         print("\n ==== ROC CURVE ====")
-        plt.title("ROC Curve Synthetic")
-        RocCurveDisplay.from_estimator(model_syn, X_test_real, y_test_real) # we plot the ROC Curve and calculate the AUC score
+        fig, ax = plt.subplots()
+        RocCurveDisplay.from_estimator(model_syn, X_test_real, y_test_real, ax=ax) # we plot the ROC Curve and calculate the AUC score
+        ax.set_title("ROC Curve Synthetic")
         plt.show()
-        plt.title("ROC Curve Real")
-        RocCurveDisplay.from_estimator(model_real, X_test_real, y_test_real)
+
+        fig, ax = plt.subplots()
+        RocCurveDisplay.from_estimator(model_real, X_test_real, y_test_real, ax=ax)
+        ax.set_title("ROC Curve Real")
         plt.show()
 
         print("\n ==== CROSS-VALIDATION ANALYSIS ====")
