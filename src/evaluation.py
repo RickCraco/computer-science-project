@@ -29,7 +29,7 @@ def plot_confusion_matrix(y_true, y_pred, labels= ["Negative", "Positive"], show
         ax.text(0.5, -0.2, f"Precision: {precision:.3f}   Recall: {recall:.3f}", ha='center', transform=ax.transAxes)
 
     plt.tight_layout()
-    
+
     return fig
 
 
@@ -67,11 +67,13 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
         print(classification_report(y_test_real, y_pred_real))
 
         # we plot the confusion matrix for both synthetic and real
+        fig = plot_confusion_matrix(y_test_real, y_pred_syn)
         plt.title("Confusion Matrix - Synthetic")
-        plot_confusion_matrix(y_test_real, y_pred_syn)
+        plt.show()
 
+        fig = plot_confusion_matrix(y_test_real, y_pred_real)
         plt.title("Confusion Matrix - Real")
-        plot_confusion_matrix(y_test_real, y_pred_real)
+        plt.show()
 
         # we check the logloss values for both synthetic and real
         # condition to check wether the model has predict_proba method
