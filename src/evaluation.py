@@ -103,13 +103,9 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
         grid_syn = result["grid_search_syn"]
         grid_real = result["grid_search_real"]
 
-        # we create a df containing the cv_results_ dict
-        cv_syn_df = pd.DataFrame(grid_syn.cv_results_)
-        cv_real_df = pd.DataFrame(grid_real.cv_results_)
-
-        # we calculate the mean accuracy score for each fold
-        mean_cv_syn = cv_syn_df["mean_test_score"].mean()
-        mean_cv_real = cv_real_df["mean_test_score"].mean()
+        # we calculate the mean score of cv for the best configuration
+        mean_cv_syn = grid_syn.best_score_
+        mean_cv_real = grid_real.best_score
 
         print(f"Mean CV score (Synthetic): {mean_cv_syn:.4f}")
         print(f"Mean CV score (Real):      {mean_cv_real:.4f}")
