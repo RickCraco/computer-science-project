@@ -26,7 +26,7 @@ def get_models_config():
         },
         {
             "name": "SupportVectorClassifier",
-            "model": SVC(),
+            "model": SVC(probability=True),
             "param_grid": {
                 "classifier__C": [0.01, 0.1, 1, 10],
                 "classifier__gamma": [0.001, 0.01, 0.1, 1],
