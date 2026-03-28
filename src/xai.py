@@ -26,14 +26,18 @@ def get_feature_importance(results_list: list):
 
         # we check if the model has the right attribute for feature importance
         if hasattr(model_syn, "coef_") and hasattr(model_real, "coef_"):
-            importances_syn = model_syn.coef_[0]    # we take the feature importances for both real and syn
-            importances_real = model_real.coef_[0]
+            importances_syn = np.abs(model_syn.coef_[0])    # we take the feature importances for both real and syn
+            importances_real = np.abs(model_real.coef_[0])
         elif hasattr(model_syn, "feature_importances_") and hasattr(model_real, "feature_importances_"):
             importances_syn = model_syn.feature_importances_
             importances_real = model_real.feature_importances_
         else:
             print("Model does not support feature importances")
             continue 
+        
+        # we normalize the importances values (some models does not have importance already normalized)
+        importances_syn = importances_syn / importances_syn.sum()
+        importances_real = importances_real / importances_real.sum()
 
         # we save the results inside a df
         df_importance_syn = pd.DataFrame({
