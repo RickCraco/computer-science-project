@@ -22,7 +22,7 @@ def get_feature_importance(results_list: list):
         model_real = result['best_estimator_real'].named_steps["classifier"]
 
         # we retrieve the feature names
-        feature_names = model_syn.named_steps['preprocessor'].get_feature_names_out()
+        feature_names = result["best_estimator_syn"].named_steps['preprocessor'].get_feature_names_out()
 
         # we check if the model has the right attribute for feature importance
         if hasattr(model_syn, "coef_") and hasattr(model_real, "coef_"):
