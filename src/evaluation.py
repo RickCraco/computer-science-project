@@ -105,7 +105,7 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
 
         # we calculate the mean score of cv for the best configuration
         mean_cv_syn = grid_syn.best_score_
-        mean_cv_real = grid_real.best_score
+        mean_cv_real = grid_real.best_score_
 
         print(f"Mean CV score (Synthetic): {mean_cv_syn:.4f}")
         print(f"Mean CV score (Real):      {mean_cv_real:.4f}")
