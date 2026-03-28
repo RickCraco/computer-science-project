@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OrdinalEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 
 def remove_outliers(df: pd.DataFrame, columns: list) -> pd.DataFrame:
@@ -52,7 +52,7 @@ def get_preprocessor(numeric_features: list, categorical_features: list):
     numeric_transformer = StandardScaler()
 
     # ordinal encoding for categorical features
-    categorical_transformer = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+    categorical_transformer = OneHotEncoder(drop="first")
 
     # preprocessor for sklearn pipeline
     preprocessor = ColumnTransformer(
