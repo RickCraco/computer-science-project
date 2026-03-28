@@ -109,7 +109,7 @@ def evaluate_models(results_list: list, X_test_real: pd.DataFrame, y_test_real: 
 
         print(f"Mean CV score (Synthetic): {mean_cv_syn:.4f}")
         print(f"Mean CV score (Real):      {mean_cv_real:.4f}")
-        print(f"Difference (Syn - Real):   {(mean_cv_syn - mean_cv_real):.4f}")
+        print(f"Difference (Real - Syn):   {(mean_cv_real - mean_cv_syn):.4f}")
 
 
 
