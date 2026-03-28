@@ -19,7 +19,7 @@ def get_feature_importance(results_list: list):
 
         # we retrieve the best estimator from GridSearchCV for both syn and real
         model_syn = result['best_estimator_syn'].named_steps["classifier"]
-        model_real = result['best_estimator_real'].name_steps["classifier"]
+        model_real = result['best_estimator_real'].named_steps["classifier"]
 
         # we retrieve the feature names
         feature_names = model_syn.named_steps['preprocessor'].get_feature_names_out()
