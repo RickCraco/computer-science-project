@@ -18,8 +18,8 @@ def get_feature_importance(results_list: list):
         model_name = result["model"]
 
         # we retrieve the best estimator from GridSearchCV for both syn and real
-        model_syn = result['best_estimator_syn']
-        model_real = result['best_estimator_real']
+        model_syn = result['best_estimator_syn'].named_steps["classifier"]
+        model_real = result['best_estimator_real'].name_steps["classifier"]
 
         # we retrieve the feature names
         feature_names = model_syn.named_steps['preprocessor'].get_feature_names_out()
@@ -33,6 +33,7 @@ def get_feature_importance(results_list: list):
             importances_real = model_real.feature_importances_
         else:
             print("Model does not support feature importances")
+            continue 
 
         # we save the results inside a df
         df_importance_syn = pd.DataFrame({
@@ -49,11 +50,11 @@ def get_feature_importance(results_list: list):
         fig, axs = plt.subplots(1,2, figsize=(10,8))  # we create a grid with 1 row and 2 cols
 
         # bar chart for better visualization
-        sns.barplot(data=df_importance_syn, x="importance_syn", y="feature", ax=axs[0,0])
-        axs[0,0].set_title(f"Feature Importance - {model_name} - Synthetic")
+        sns.barplot(data=df_importance_syn, x="importance_syn", y="feature", ax=axs[0])
+        axs[0].set_title(f"Feature Importance - {model_name} - Synthetic")
 
-        sns.barplot(data=df_importance_real, x="importance_real", y="feature", ax=axs[0,1])
-        axs[0,1].set_title(f"Feature Importance - {model_name} - Real")
+        sns.barplot(data=df_importance_real, x="importance_real", y="feature", ax=axs[1])
+        axs[1].set_title(f"Feature Importance - {model_name} - Real")
 
         plt.tight_layout()
         plt.show()
