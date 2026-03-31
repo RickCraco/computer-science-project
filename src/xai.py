@@ -51,7 +51,7 @@ def get_feature_importance(results_list: list):
         }).sort_values(by="importance_real", ascending=False)
 
         # we create a subplot for multiple plots (synthetic and real)
-        fig, axs = plt.subplots(1,2, figsize=(10,8))  # we create a grid with 1 row and 2 cols
+        fig, axs = plt.subplots(1,2, figsize=(16,8))  # we create a grid with 1 row and 2 cols
 
         # bar chart for better visualization
         sns.barplot(data=df_importance_syn, x="importance_syn", y="feature", ax=axs[0])
