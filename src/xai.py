@@ -65,41 +65,55 @@ def get_feature_importance(results_list: list):
         plt.show()
 
 
-def plot_shap_values(model_syn: object, model_real: object, X_test_real: pd.DataFrame):
+def plot_shap_values(result_dict: dict, test_df: pd.DataFrame):
     """
-    Performs SHAP analysis on a model and plots the SHAP values.
+    Perform SHAP analysis on a black box model (synthetic and real)
+    and plot summary and waterfall plots.
 
     Input:
-    model_syn: object  model to perform SHAP analysis on synthetic data
-    model_real: object  model to perform SHAP analysis on real data
-    X_test_real: pd.DataFrame  test set of real data
+    result_dict: dict  dictionary containing best_estimator syn and real pipelines
+    test_df:  pd.DataFrame   test set of real data including the target column
     """
+    # we extract the classifier and preprocessor from the pipeline (both real and synthetic)
+    best_syn = result_dict['best_estimator_syn'].named_steps['classifier']
+    preprocessor_syn = result_dict["best_estimator_syn"].named_steps['preprocessor']
+
+    best_real = result_dict['best_estimator_real'].named_steps['classifier']
+    preprocessor_real = result_dict["best_estimator_real"].named_steps['preprocessor']
+
+    # we apply the transformations to the test data
+    X_test_transformed_syn = preprocessor_syn.transform(test_df.drop("HeartDisease", axis=1))
+    X_test_transformed_real = preprocessor_real.transform(test_df.drop("HeartDisease", axis=1))
+
+    # we extract the feature names from the preprocessor
+    feature_names_syn = preprocessor_syn.get_feature_names_out()
+    feature_names_real = preprocessor_real.get_feature_names_out()
+
     # we initialize the SHAP explainer
-    explainer_syn = shap.Explainer(model_syn)
-    explainer_real = shap.Explainer(model_real)
+    explainer_syn = shap.Explainer(best_syn, X_test_transformed_syn, feature_names=feature_names_syn)
+    explainer_real = shap.Explainer(best_real, X_test_transformed_real, feature_names=feature_names_real)
 
-    # we calculate the SHAP values for both synthetic and real data
-    shap_values_syn = explainer_syn.shap_values(X_test_real)
-    shap_values_real = explainer_real.shap_values(X_test_real)
+    # we calculate the SHAP values
+    shap_values_syn = explainer_syn(X_test_transformed_syn)
+    shap_values_real = explainer_real(X_test_transformed_real)
 
-    # we plot the SHAP values for both synthetic and real data
-    fig, axs = plt.subplots(1,2, figsize=(16,8))
-    shap.summary_plot(shap_values_syn, X_test_real, ax=axs[0])
-    axs[0].set_title("Synthetic SHAP Summary Plot")
-    shap.summary_plot(shap_values_real, X_test_real, ax=axs[1])
-    axs[1].set_title("Real SHAP Summary Plot")
+    # summary plot for global interpretation
+    shap.summary_plot(shap_values_syn, X_test_transformed_syn, plot_type="bar")
+    shap.summary_plot(shap_values_real, X_test_transformed_real, plot_type="bar")
+
+    # summary plot without bars
+    shap.summary_plot(shap_values_syn, X_test_transformed_syn)
+    shap.summary_plot(shap_values_real, X_test_transformed_real)
+
+    # waterfall plot for local interpretation (both real and synthetic)
+    plt.figure(figsize=(8,6))
+    shap.waterfall_plot(shap_values_syn[0])
+    plt.title("Waterfall Plot (SYN)")
     plt.tight_layout()
     plt.show()
 
-    # waterfall plots for local interpretation
-    plt.figure(figsize=(8, 6))
-    shap.plots.waterfall(shap_values_syn[0], show=False)
-    plt.title("Synthetic Waterfall Plot")
-    plt.tight_layout()
-    plt.show()
-
-    plt.figure(figsize=(8, 6))
-    shap.plots.waterfall(shap_values_real[0], show=False)
-    plt.title("Real Waterfall Plot")
+    plt.figure(figsize=(8,6))
+    shap.waterfall_plot(shap_values_real[0])
+    plt.title("Waterfall Plot (REAL)")
     plt.tight_layout()
     plt.show()
