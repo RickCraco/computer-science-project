@@ -106,14 +106,8 @@ def plot_shap_values(result_dict: dict, test_df: pd.DataFrame):
     shap.summary_plot(shap_values_real, X_test_transformed_real)
 
     # waterfall plot for local interpretation (both real and synthetic)
-    plt.figure(figsize=(8,6))
+    print("Waterfall Plot (SYN)")
     shap.waterfall_plot(shap_values_syn[0])
-    plt.title("Waterfall Plot (SYN)")
-    plt.tight_layout()
-    plt.show()
 
-    plt.figure(figsize=(8,6))
+    print("Waterfall Plot (REAL)")
     shap.waterfall_plot(shap_values_real[0])
-    plt.title("Waterfall Plot (REAL)")
-    plt.tight_layout()
-    plt.show()
