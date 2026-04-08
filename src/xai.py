@@ -63,3 +63,42 @@ def get_feature_importance(results_list: list):
 
         plt.tight_layout()
         plt.show()
+
+
+def plot_shap_values(model_syn: object, model_real: object, X_test_real: pd.DataFrame):
+    """
+    Performs SHAP analysis on a model and plots the SHAP values.
+
+    Input:
+    model_syn: object  model to perform SHAP analysis on synthetic data
+    model_real: object  model to perform SHAP analysis on real data
+    X_test_real: pd.DataFrame  test set of real data
+    """
+    # we initialize the SHAP explainer
+    explainer = shap.Explainer(model_syn)
+
+    # we calculate the SHAP values for both synthetic and real data
+    shap_values_syn = explainer.shap_values(X_test_real)
+    shap_values_real = explainer.shap_values(X_test_real)
+
+    # we plot the SHAP values for both synthetic and real data
+    fig, axs = plt.subplots(1,2, figsize=(16,8))
+    shap.summary_plot(shap_values_syn, X_test_real, ax=axs[0])
+    axs[0].set_title("Synthetic SHAP Summary Plot")
+    shap.summary_plot(shap_values_real, X_test_real, ax=axs[1])
+    axs[1].set_title("Real SHAP Summary Plot")
+    plt.tight_layout()
+    plt.show()
+
+    # waterfall plots for local interpretation
+    plt.figure(figsize=(8, 6))
+    shap.plots.waterfall(shap_values_syn[0], show=False)
+    plt.title("Synthetic Waterfall Plot")
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(8, 6))
+    shap.plots.waterfall(shap_values_real[0], show=False)
+    plt.title("Real Waterfall Plot")
+    plt.tight_layout()
+    plt.show()
