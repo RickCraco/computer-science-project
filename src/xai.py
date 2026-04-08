@@ -75,11 +75,12 @@ def plot_shap_values(model_syn: object, model_real: object, X_test_real: pd.Data
     X_test_real: pd.DataFrame  test set of real data
     """
     # we initialize the SHAP explainer
-    explainer = shap.Explainer(model_syn)
+    explainer_syn = shap.Explainer(model_syn)
+    explainer_real = shap.Explainer(model_real)
 
     # we calculate the SHAP values for both synthetic and real data
-    shap_values_syn = explainer.shap_values(X_test_real)
-    shap_values_real = explainer.shap_values(X_test_real)
+    shap_values_syn = explainer_syn.shap_values(X_test_real)
+    shap_values_real = explainer_real.shap_values(X_test_real)
 
     # we plot the SHAP values for both synthetic and real data
     fig, axs = plt.subplots(1,2, figsize=(16,8))
