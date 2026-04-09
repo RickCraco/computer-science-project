@@ -107,7 +107,7 @@ def plot_shap_values(result_dict: dict, test_df: pd.DataFrame):
 
     # waterfall plot for local interpretation (both real and synthetic)
     print("Waterfall Plot (SYN)")
-    shap.waterfall_plot(shap_values_syn[0])
+    shap.waterfall_plot(shap_values_syn[0], max_display=20)
 
     print("Waterfall Plot (REAL)")
-    shap.waterfall_plot(shap_values_real[0])
+    shap.waterfall_plot(shap_values_real[0], max_display=20)
