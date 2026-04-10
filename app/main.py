@@ -12,9 +12,6 @@ model_path = os.path.join(BASE_DIR, "..", "models", "catboost_syn.pkl")
 # we load the pipeline
 best_syn = joblib.load(model_path)
 
-# we initialize the SHAP explainer
-explainer = shap.Explainer(best_syn)
-
 # feature order expected by the pipeline
 FEATURES = [
     "Age", "Sex", "ChestPainType", "RestingBP", "Cholesterol",
@@ -23,7 +20,7 @@ FEATURES = [
 ]
 
 # main function
-def predict_result(df: pd.DataFrame) -> tuple:
+def predict_result(*args) -> tuple:
     """
     Predict the class label with the associated probability
     and plot the Waterfall plot for SHAP analysis.
@@ -35,19 +32,26 @@ def predict_result(df: pd.DataFrame) -> tuple:
 
     tuple:  tuple  tuple containing the class label, probability and figure of the plot
     """
+    data = dict(zip(FEATURES, args))
+
     # input dataframe
-    input_data = pd.DataFrame(df, columns=FEATURES)
+    input_data = pd.DataFrame([data])
 
     # we make the model prediction
     pred = best_syn.predict(input_data)[0]
     proba = best_syn.predict_proba(input_data)[0][1]
 
-    # we calculate the SHAP values
+    # SHAP needs a callable model; we explain predict_proba for class 1.
+    # We use the current input as masker baseline to keep the app robust.
+    explainer = shap.Explainer(
+        best_syn.predict_proba,
+        masker=shap.maskers.Independent(input_data)
+    )
     shap_values = explainer(input_data)
 
     # we plot the waterfall plot
     fig = plt.figure()
-    shap.waterfall_plot(shap_values[0], max_display=20)
+    shap.waterfall_plot(shap_values[0, :, 1], max_display=20)
 
     # we calculate the class label "Heart Disease"
     label = "Heart Disease" if pred == 1 else "No Heart Disease"
@@ -58,16 +62,19 @@ def predict_result(df: pd.DataFrame) -> tuple:
 # gradio user interface
 demo = gr.Interface(
     fn = predict_result,
-    inputs=gr.DataFrame(
-        headers=FEATURES,
-        row_count=1,
-        col_count=len(FEATURES),
-        datatype=[
-            "number", "str", "str", "number", "number",
-            "number", "str", "number", "str", "number", "str"
-        ],
-        label="User Data Input"
-    ),
+    inputs= [
+        gr.Number(label="Age"),
+        gr.Dropdown(["M", "F"], label="Sex"),
+        gr.Dropdown(["TA", "ATA", "NAP", "ASY"], label="Chest Pain Type"),
+        gr.Number(label="Resting Blood Pressure"),
+        gr.Number(label="Cholesterol"),
+        gr.Dropdown([0, 1], label="Fasting Blood Sugar"),
+        gr.Dropdown(["Normal", "ST", "LVH"], label="Resting ECG"),
+        gr.Number(label="Max Heart Rate"),
+        gr.Dropdown(["Y", "N"], label="Exercise Induced Angina"),
+        gr.Number(label="Oldpeak"),
+        gr.Dropdown(["Up", "Flat", "Down"], label="ST Slope"),
+    ],
     outputs=[
         gr.Text(label="Prediction"),
         gr.Number(label="Probability (Heart Disease)"),
