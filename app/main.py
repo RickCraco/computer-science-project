@@ -11,6 +11,9 @@ model_path = os.path.join(BASE_DIR, "..", "models", "catboost_syn.pkl")
 
 # we load the pipeline
 best_syn = joblib.load(model_path)
+preprocessor = best_syn.named_steps["preprocessor"]
+classifier = best_syn.named_steps["classifier"]
+feature_names = preprocessor.get_feature_names_out()
 
 # feature order expected by the pipeline
 FEATURES = [
@@ -41,17 +44,15 @@ def predict_result(*args) -> tuple:
     pred = best_syn.predict(input_data)[0]
     proba = best_syn.predict_proba(input_data)[0][1]
 
-    # SHAP needs a callable model; we explain predict_proba for class 1.
-    # We use the current input as masker baseline to keep the app robust.
-    explainer = shap.Explainer(
-        best_syn.predict_proba,
-        masker=shap.maskers.Independent(input_data)
-    )
-    shap_values = explainer(input_data)
+    # we initialize the SHAP explainer and calculate SHAP values
+    input_transformed = preprocessor.transform(input_data) # SHAP does not work well with pipelines, so we need to pass the preprocessed input
+
+    explainer = shap.Explainer(classifier, input_transformed, feature_names=feature_names)
+    shap_values = explainer(input_transformed)
 
     # we plot the waterfall plot
     fig = plt.figure()
-    shap.waterfall_plot(shap_values[0, :, 1], max_display=20)
+    shap.waterfall_plot(shap_values[0], max_display=20)
 
     # we calculate the class label "Heart Disease"
     label = "Heart Disease" if pred == 1 else "No Heart Disease"
