@@ -50,9 +50,12 @@ def predict_result(*args) -> tuple:
     explainer = shap.Explainer(classifier,feature_names=feature_names)
     shap_values = explainer(input_transformed)
 
-    # we plot the waterfall plot
-    fig = shap.waterfall_plot(shap_values[0], max_display=20)
-    plt.tight_layout()
+    # SHAP often draws on the current matplotlib figure and may return None.
+    # for Gradio's Plot output, we must return an explicit Figure object.
+    plt.close("all")
+    shap.waterfall_plot(shap_values[0], max_display=20, show=False)
+    fig = plt.gcf()
+    fig.tight_layout()
 
     # we calculate the class label "Heart Disease"
     label = "Heart Disease" if pred == 1 else "No Heart Disease"
