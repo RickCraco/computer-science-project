@@ -90,8 +90,8 @@ def plot_shap_values(result_dict: dict, test_df: pd.DataFrame):
     feature_names_real = preprocessor_real.get_feature_names_out()
 
     # we initialize the SHAP explainer
-    explainer_syn = shap.Explainer(best_syn, X_test_transformed_syn, feature_names=feature_names_syn)
-    explainer_real = shap.Explainer(best_real, X_test_transformed_real, feature_names=feature_names_real)
+    explainer_syn = shap.Explainer(best_syn, X_test_transformed_syn, feature_names=feature_names_syn, seed=42)
+    explainer_real = shap.Explainer(best_real, X_test_transformed_real, feature_names=feature_names_real, seed=42)
 
     # we calculate the SHAP values
     shap_values_syn = explainer_syn(X_test_transformed_syn)
