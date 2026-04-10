@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(BASE_DIR, "..", "models", "catboost_syn.pkl")
 
 # we load the pipeline
-best_syn = joblib.load("../models/catboost_syn.pkl")
+best_syn = joblib.load(model_path)
 
 # we initialize the SHAP explainer
 explainer = shap.Explainer(best_syn)
