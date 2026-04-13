@@ -37,7 +37,7 @@ def build_dnn(n_features: int):
     model.add(Dense(units=1, activation='sigmoid'))
 
     # we compile the model
-    model.compile(loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', metrics=['accuracy'], optimizer="adam")
 
     return model
 
