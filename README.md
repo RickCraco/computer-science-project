@@ -11,6 +11,7 @@ The research focuses on the consistency of model decision-making across real and
 * **Comprehensive ML Pipeline:** Includes preprocessing (handling missing data, encoding, scaling), model training, and hyperparameter tuning.
 * **Model Benchmarking:** Evaluation of multiple classifiers, including Logistic Regression, Decision Trees, Random Forest, XGBoost, and Deep Neural Networks (DNN).
 * **Interpretability Analysis:** Leveraging **SHAP** and feature importance to understand and verify the clinical drivers behind predictions.
+* **Fairness Analysis:** Using the Fairlearn library to perform fairness analysis.
 * **Interactive Prototype:** A web interface developed with **Gradio** for real-time visualization of predictions and model reasoning.
 
 ## Technical Stack
