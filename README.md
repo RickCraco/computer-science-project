@@ -1,4 +1,4 @@
-# Heart Disease Classification Pipeline with Synthetic Data Augmentation
+# Heart Disease Classification Pipeline: Synthetic Data Generation & Explainable AI
 
 ## Project Overview
 This project aims to develop and evaluate a robust machine learning pipeline for the classification of heart diseases, specifically designed as a decision support tool for medical professionals. A core component of the project is the use of **Generative AI (CTGAN)** to produce synthetic clinical data, which addresses the challenges of small sample sizes and privacy in healthcare datasets.
@@ -18,7 +18,9 @@ The research focuses on the consistency of model decision-making across real and
 * **Data Libraries:** NumPy, Pandas 
 * **Visualization:** Matplotlib, Seaborn 
 * **Machine Learning:** Scikit-Learn, XGBoost, TensorFlow/Keras 
-* **Synthetic Data Generation:** SDV (Synthetic Data Vault), CTGAN 
+* **Synthetic Data Generation:** SDV (Synthetic Data Vault), CTGAN
+* **Explainability:** SHAP
+* **Fairness:** Fairlearn
 * **Web Interface:** Gradio 
 
 ## Repository Structure
